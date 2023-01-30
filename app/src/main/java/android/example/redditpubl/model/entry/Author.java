@@ -34,7 +34,6 @@ public class Author implements Serializable {
         return "Author{" +
                 "name='" + name + '\'' +
                 ", uri='" + uri + '\'' +
-                '}'+ "\n"+
-                "-------------------------------------------------------------------";
+                '}';
     }
 }

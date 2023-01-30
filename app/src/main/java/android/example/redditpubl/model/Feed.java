@@ -61,7 +61,7 @@ public class Feed implements Serializable {
     @Override
     public String toString() {
         return "Feed{" +
-                "entrys=" + entrys +
+                "entrys=" +"\n"+ entrys +
                 '}';
     }
 }

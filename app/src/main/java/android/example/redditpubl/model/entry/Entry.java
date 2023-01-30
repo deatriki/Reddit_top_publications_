@@ -92,13 +92,14 @@ public class Entry implements Serializable {
 
     @Override
     public String toString() {
-        return "Entry{" +
+        return "\n\nEntry{" +
                 "title='" + title + '\'' +
 //                ", link='" + link + '\'' +
                 ", id='" + id + '\'' +
                 ", content='" + content + '\'' +
                 ", author='" + author + '\'' +
                 ", updated='" + updated + '\'' +
-                '}';
+                '}'+ "\n" +
+                "----------------------------------------------------------------";
     }
 }
