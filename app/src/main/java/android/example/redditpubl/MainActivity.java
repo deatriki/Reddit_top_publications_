@@ -1,11 +1,14 @@
 package android.example.redditpubl;
 
 import android.example.redditpubl.model.Feed;
+import android.example.redditpubl.model.entry.Entry;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,8 +38,35 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
-                Log.d(TAG, "onResponse: feed;" + response.body().toString());
+
                 Log.d(TAG, "onResponse: Server Response:" + response.toString());
+
+                List<Entry> entries = response.body().getEntrys();
+
+                Log.d(TAG, "onResponse: entries;" + response.body().getEntrys());
+
+//                Log.d(TAG, "onResponse: author: " + entries.get(0).getAuthor().getName());
+//                Log.d(TAG, "onResponse: updated: " + entries.get(0).getUpdated());
+//                Log.d(TAG, "onResponse: title: " + entries.get(0).getTitle());
+
+                for (int i = 0; i < entries.size(); i++) {
+                    ExtractXML extractXML1 = new ExtractXML(entries.get(i).getContent(), "<a href=");
+                    List<String> postContent =  extractXML1.start();
+
+                    ExtractXML extractXML2 = new ExtractXML(entries.get(i).getContent(), "<img src=");
+                    try {
+                        postContent.add(extractXML2.start().get(0));
+                    }catch (NullPointerException e){
+                        postContent.add(null);
+                        Log.e(TAG, "onResponse: NullPointerException(thumbnail): "+ e.getMessage() );
+                    }
+                    catch (IndexOutOfBoundsException e){
+                        postContent.add(null);
+                        Log.e(TAG, "onResponse: IndexOutOfBoundsException(thumbnail): "+ e.getMessage() );
+                    }
+                    
+                }
+
             }
 
             @Override
