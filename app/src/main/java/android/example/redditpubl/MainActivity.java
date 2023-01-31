@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 //                Log.d(TAG, "onResponse: author: " + entries.get(0).getAuthor().getName());
 //                Log.d(TAG, "onResponse: updated: " + entries.get(0).getUpdated());
 //                Log.d(TAG, "onResponse: title: " + entries.get(0).getTitle());
-
+                ArrayList<Post> posts = new ArrayList<>();
                 for (int i = 0; i < entries.size(); i++) {
                     ExtractXML extractXML1 = new ExtractXML(entries.get(i).getContent(), "<a href=");
                     List<String> postContent =  extractXML1.start();
@@ -64,7 +65,14 @@ public class MainActivity extends AppCompatActivity {
                         postContent.add(null);
                         Log.e(TAG, "onResponse: IndexOutOfBoundsException(thumbnail): "+ e.getMessage() );
                     }
-                    
+                    int lastPosition = postContent.size() - 1;
+                    posts.add(new Post(
+                            entries.get(i).getTitle(),
+                            entries.get(i).getAuthor().getName(),
+                            entries.get(i).getUpdated(),
+                            postContent.get(0),
+                            postContent.get(lastPosition)
+                    ));
                 }
 
             }
