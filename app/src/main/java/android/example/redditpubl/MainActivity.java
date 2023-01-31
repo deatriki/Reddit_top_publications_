@@ -4,6 +4,9 @@ import android.example.redditpubl.model.Feed;
 import android.example.redditpubl.model.entry.Entry;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,12 +25,27 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private static final String BASE_URL = "https://www.reddit.com/";
+
+    private Button btnRefreshFeed;
     
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnRefreshFeed = (Button) findViewById(R.id.btnRefreshFeed);
+
+        init();
+
+        btnRefreshFeed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                init();
+            }
+        });
+    }
+
+    private void init(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(SimpleXmlConverterFactory.create())
@@ -55,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     List<String> postContent =  extractXML1.start();
 
                     ExtractXML extractXML2 = new ExtractXML(entries.get(i).getContent(), "<img src=");
-                    try {
+                    /*try {
                         postContent.add(extractXML2.start().get(0));
                     }catch (NullPointerException e){
                         postContent.add(null);
@@ -64,8 +82,10 @@ public class MainActivity extends AppCompatActivity {
                     catch (IndexOutOfBoundsException e){
                         postContent.add(null);
                         Log.e(TAG, "onResponse: IndexOutOfBoundsException(thumbnail): "+ e.getMessage() );
-                    }
-                    int lastPosition = postContent.size() - 1;
+                    }*/
+
+                    // -2 для
+                    int lastPosition = postContent.size() - 2;
                     posts.add(new Post(
                             entries.get(i).getTitle(),
                             entries.get(i).getAuthor().getName(),
@@ -74,6 +94,17 @@ public class MainActivity extends AppCompatActivity {
                             postContent.get(lastPosition)
                     ));
                 }
+                for (int j = 0; j < posts.size(); j++) {
+                    Log.d(TAG, "onResponse: \n"+
+                            "Post url: " + posts.get(j).getPostURL() + "\n"+
+                            "Thumbnail url: " + posts.get(j).getThubnailURL() + "\n"+
+                            "Title: " + posts.get(j).getTitle() + "\n"+
+                            "Author: " + posts.get(j).getAuthor() + "\n"+
+                            "Updated: " + posts.get(j).getData_update() + "\n");
+                }
+                ListView listView = (ListView) findViewById(R.id.listView);
+                CustomListAdapter customListAdapter= new CustomListAdapter(MainActivity.this, R.layout.card_layout_main, posts);
+                listView.setAdapter(customListAdapter);
 
             }
 

@@ -49,4 +49,10 @@ dependencies {
     //Retrofit XMLConverter
     implementation 'com.squareup.retrofit2:converter-simplexml:2.9.0'
 
+    //card view
+    implementation "androidx.cardview:cardview:1.0.0"
+
+    //universal image loader
+    implementation "com.nostra13.universalimageloader:universal-image-loader:1.9.5"
+
 }
