@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.e(TAG, "onResponse: IndexOutOfBoundsException(thumbnail): "+ e.getMessage() );
                     }*/
 
-                    // -2 для
+                    // -2 тому що там силка на фото заникана і короче так надо (если не понятно контент чекни)
                     int lastPosition = postContent.size() - 2;
                     posts.add(new Post(
                             entries.get(i).getTitle(),
