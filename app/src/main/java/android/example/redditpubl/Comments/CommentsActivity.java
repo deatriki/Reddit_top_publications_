@@ -5,6 +5,7 @@ import android.example.redditpubl.ExtractXML;
 import android.example.redditpubl.FeedAPI;
 import android.example.redditpubl.R;
 import android.example.redditpubl.URLS;
+import android.example.redditpubl.WebViewAtivity;
 import android.example.redditpubl.model.Feed;
 import android.example.redditpubl.model.entry.Entry;
 import android.graphics.Bitmap;
@@ -152,7 +153,7 @@ public class CommentsActivity extends AppCompatActivity {
         TextView author = (TextView) findViewById(R.id.postAuthor);
         TextView updated = (TextView) findViewById(R.id.postUpdated);
         ImageView thumbnail = (ImageView) findViewById(R.id.postThumbnail);
-        Button btnReply = (Button) findViewById(R.id.btnPostReply);
+//        Button btnReply = (Button) findViewById(R.id.btnPostReply);
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.postLoadingProgressBar);
 
         title.setText(postTitle);
@@ -167,7 +168,15 @@ public class CommentsActivity extends AppCompatActivity {
         }catch (ArrayIndexOutOfBoundsException e){
             Log.e(TAG, "initPost: ArrayIndexOutOfBoundsException: " + e.getMessage());
         }
-
+        thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: Opening url " + postThumbnailURL);
+                Intent intent = new Intent(CommentsActivity.this, WebViewAtivity.class);
+                intent.putExtra("url",postThumbnailURL);
+                startActivity(intent);
+            }
+        });
     }
 
     private void displayImage(String imgURL,ImageView imageView, final ProgressBar progressBar){

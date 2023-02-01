@@ -22,9 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Comments.CommentsActivity">
-
-        </activity>
+        <activity android:name=".Comments.CommentsActivity"></activity>
+        <activity android:name=".WebViewAtivity"></activity>
     </application>
 
 </manifest>
