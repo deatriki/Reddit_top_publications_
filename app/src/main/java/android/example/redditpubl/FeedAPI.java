@@ -9,7 +9,7 @@ import retrofit2.http.Path;
 public interface FeedAPI {
 
 
-    @GET("r/{feed_name}/.rss")
+    @GET("{feed_name}/.rss")
     Call<Feed> getFeed(@Path("feed_name") String feed_name);
 
     @GET("top.rss")

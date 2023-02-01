@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String BASE_URL = "https://www.reddit.com/";
 
     private Button btnRefreshFeed;
+
+
     
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -34,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnRefreshFeed = (Button) findViewById(R.id.btnRefreshFeed);
+
+
 
         init();
 
@@ -43,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 init();
             }
         });
+
+
     }
 
     private void init(){
@@ -107,6 +114,8 @@ public class MainActivity extends AppCompatActivity {
                 listView.setAdapter(customListAdapter);
 
             }
+
+
 
             @Override
             public void onFailure(Call<Feed> call, Throwable t) {
