@@ -1,16 +1,18 @@
 package android.example.redditpubl;
 
+import android.content.Intent;
+import android.example.redditpubl.Comments.CommentsActivity;
 import android.example.redditpubl.model.Feed;
 import android.example.redditpubl.model.entry.Entry;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +27,12 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
-    private static final String BASE_URL = "https://www.reddit.com/";
+    URLS urls = new URLS();
 
     private Button btnRefreshFeed;
 
 
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void init(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(urls.BASE_URL)
                 .addConverterFactory(SimpleXmlConverterFactory.create())
                 .build();
 
@@ -74,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
 //                Log.d(TAG, "onResponse: author: " + entries.get(0).getAuthor().getName());
 //                Log.d(TAG, "onResponse: updated: " + entries.get(0).getUpdated());
 //                Log.d(TAG, "onResponse: title: " + entries.get(0).getTitle());
-                ArrayList<Post> posts = new ArrayList<>();
+                final ArrayList<Post> posts = new ArrayList<>();
                 for (int i = 0; i < entries.size(); i++) {
                     ExtractXML extractXML1 = new ExtractXML(entries.get(i).getContent(), "<a href=");
                     List<String> postContent =  extractXML1.start();
 
-                    ExtractXML extractXML2 = new ExtractXML(entries.get(i).getContent(), "<img src=");
+//                    ExtractXML extractXML2 = new ExtractXML(entries.get(i).getContent(), "<img src=");
                     /*try {
                         postContent.add(extractXML2.start().get(0));
                     }catch (NullPointerException e){
@@ -112,6 +114,20 @@ public class MainActivity extends AppCompatActivity {
                 ListView listView = (ListView) findViewById(R.id.listView);
                 CustomListAdapter customListAdapter= new CustomListAdapter(MainActivity.this, R.layout.card_layout_main, posts);
                 listView.setAdapter(customListAdapter);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Log.d(TAG, "onItemClick: Clicked " + posts.get(position).toString());
+                        Intent intent = new Intent(MainActivity.this, CommentsActivity.class);
+                        intent.putExtra("@string/post_url", posts.get(position).getPostURL());
+                        intent.putExtra("@string/post_thumbnail", posts.get(position).getThubnailURL());
+                        intent.putExtra("@string/post_title", posts.get(position).getTitle());
+                        intent.putExtra("@string/post_author", posts.get(position).getAuthor());
+                        intent.putExtra("@string/post_updated", posts.get(position).getData_update());
+                        startActivity(intent);
+                    }
+                });
 
             }
 

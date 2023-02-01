@@ -56,6 +56,9 @@ dependencies {
     implementation "com.nostra13.universalimageloader:universal-image-loader:1.9.5"
 
     //Design library needed to coordinator layout
-    //noinspection GradleCompatible
-    implementation 'com.android.support:design:28.0.0'
+
+
+    implementation 'com.android.support:support-annotations:28.0.0'
+
+
 }
