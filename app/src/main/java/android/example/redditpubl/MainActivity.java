@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -85,12 +86,13 @@ public class MainActivity extends AppCompatActivity {
                     String[] updated = entries.get(i).getUpdated().split("T");
                     String[] upDate = updated[0].split("-");
                     String[] upTime = updated[1].split(":");
-                    Log.d(TAG, "onResponse: date: " + upDate[0]+"."+upDate[1]+"." + upDate[2] + " AD at " +
-                            upTime[0] + ":" + upTime[1] + ":00 UTC");
+                    Log.d(TAG, "onResponse: date: " + upDate[0]+"."+upDate[1]+"." + upDate[2] + " " +
+                            upTime[0] + ":" + upTime[1] + ":00");
+                    Log.d(TAG, "onResponse: now date: " + dateNow);
                     try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
-                        updateDate = format.parse(upDate[0]+"."+upDate[1]+"." + upDate[2] + " AD at " +
-                                upTime[0] + ":" + upTime[1] + ":00 UTC");
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+                        updateDate = format.parse(upDate[0]+"."+upDate[1]+"." + upDate[2] + " " +
+                                upTime[0] + ":" + upTime[1] + ":00");
                         dateNow = new Date();
 
                         entries.get(i).setUpdated(TimeUnit.MILLISECONDS.toHours(dateNow.getTime() - updateDate.getTime()) + " hours ago");
@@ -126,9 +128,14 @@ public class MainActivity extends AppCompatActivity {
                             "Author: " + posts.get(j).getAuthor() + "\n"+
                             "Updated: " + posts.get(j).getData_update() + "\n");
                 }
+
                 ListView listView = (ListView) findViewById(R.id.listView);
+
+//                RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
                 CustomListAdapter customListAdapter= new CustomListAdapter(MainActivity.this, R.layout.card_layout_main, posts);
                 listView.setAdapter(customListAdapter);
+//                recyclerView.setAdapter(customListAdapter);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -143,6 +150,19 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+//                recyclerView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view, int position) {
+//                        Log.d(TAG, "onItemClick: Clicked " + posts.get(position).toString());
+//                        Intent intent = new Intent(MainActivity.this, CommentsActivity.class);
+//                        intent.putExtra("@string/post_url", posts.get(position).getPostURL());
+//                        intent.putExtra("@string/post_thumbnail", posts.get(position).getThubnailURL());
+//                        intent.putExtra("@string/post_title", posts.get(position).getTitle());
+//                        intent.putExtra("@string/post_author", posts.get(position).getAuthor());
+//                        intent.putExtra("@string/post_updated", posts.get(position).getData_update());
+//                        startActivity(intent);
+//                    }
+//                });
 
             }
 

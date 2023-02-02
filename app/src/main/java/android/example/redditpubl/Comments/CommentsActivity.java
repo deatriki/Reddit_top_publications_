@@ -106,12 +106,13 @@ public class CommentsActivity extends AppCompatActivity {
                     String[] updated = entries.get(i).getUpdated().split("T");
                     String[] upDate = updated[0].split("-");
                     String[] upTime = updated[1].split(":");
-                    Log.d(TAG, "onResponse: date: " + upDate[0]+"."+upDate[1]+"." + upDate[2] + " AD at " +
-                            upTime[0] + ":" + upTime[1] + ":00 UTC");
+                    Log.d(TAG, "onResponse: date: " + upDate[0]+"."+upDate[1]+"." + upDate[2] + " " +
+                            upTime[0] + ":" + upTime[1] + ":00");
+                    Log.d(TAG, "onResponse: now date: " + dateNow);
                     try {
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
-                        updateDate = format.parse(upDate[0]+"."+upDate[1]+"." + upDate[2] + " AD at " +
-                                upTime[0] + ":" + upTime[1] + ":00 UTC");
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+                        updateDate = format.parse(upDate[0]+"."+upDate[1]+"." + upDate[2] + " " +
+                                upTime[0] + ":" + upTime[1] + ":00");
                         dateNow = new Date();
 
                         entries.get(i).setUpdated(TimeUnit.MILLISECONDS.toHours(dateNow.getTime() - updateDate.getTime()) + " hours ago");
