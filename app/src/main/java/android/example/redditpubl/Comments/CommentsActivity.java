@@ -32,8 +32,11 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -96,6 +99,29 @@ public class CommentsActivity extends AppCompatActivity {
 
                 mComments = new ArrayList<Comment>();
                 List<Entry> entries = response.body().getEntrys();
+
+                Date dateNow = new Date();
+                Date updateDate;
+                for (int i = 0; i < entries.size(); i++) {
+                    String[] updated = entries.get(i).getUpdated().split("T");
+                    String[] upDate = updated[0].split("-");
+                    String[] upTime = updated[1].split(":");
+                    Log.d(TAG, "onResponse: date: " + upDate[0]+"."+upDate[1]+"." + upDate[2] + " AD at " +
+                            upTime[0] + ":" + upTime[1] + ":00 UTC");
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
+                        updateDate = format.parse(upDate[0]+"."+upDate[1]+"." + upDate[2] + " AD at " +
+                                upTime[0] + ":" + upTime[1] + ":00 UTC");
+                        dateNow = new Date();
+
+                        entries.get(i).setUpdated(TimeUnit.MILLISECONDS.toHours(dateNow.getTime() - updateDate.getTime()) + " hours ago");
+
+                    }
+                    catch (Exception j){
+                        j.printStackTrace();
+                    }
+
+                }
 
                 for (int i = 0; i < entries.size(); i++) {
                     ExtractXML extractXML = new ExtractXML(entries.get(i).getContent(), "<div class=" + '"' + "md" + '"' + "><p>", "</p>");

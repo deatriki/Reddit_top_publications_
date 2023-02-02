@@ -14,8 +14,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,26 +77,38 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onResponse: entries;" + response.body().getEntrys());
 
 //                Log.d(TAG, "onResponse: author: " + entries.get(0).getAuthor().getName());
-//                Log.d(TAG, "onResponse: updated: " + entries.get(0).getUpdated());
+                Log.d(TAG, "onResponse: updated: " + entries.get(0).getUpdated());
+
+                Date dateNow = new Date();
+                Date updateDate;
+                for (int i = 0; i < entries.size(); i++) {
+                    String[] updated = entries.get(i).getUpdated().split("T");
+                    String[] upDate = updated[0].split("-");
+                    String[] upTime = updated[1].split(":");
+                    Log.d(TAG, "onResponse: date: " + upDate[0]+"."+upDate[1]+"." + upDate[2] + " AD at " +
+                            upTime[0] + ":" + upTime[1] + ":00 UTC");
+                    try {
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd G 'at' HH:mm:ss z");
+                        updateDate = format.parse(upDate[0]+"."+upDate[1]+"." + upDate[2] + " AD at " +
+                                upTime[0] + ":" + upTime[1] + ":00 UTC");
+                        dateNow = new Date();
+
+                        entries.get(i).setUpdated(TimeUnit.MILLISECONDS.toHours(dateNow.getTime() - updateDate.getTime()) + " hours ago");
+
+                    }
+                    catch (Exception j){
+                        j.printStackTrace();
+                    }
+
+                }
+                Log.d(TAG, "onResponse: date " + dateNow);
 //                Log.d(TAG, "onResponse: title: " + entries.get(0).getTitle());
                 final ArrayList<Post> posts = new ArrayList<>();
                 for (int i = 0; i < entries.size(); i++) {
                     ExtractXML extractXML1 = new ExtractXML(entries.get(i).getContent(), "<a href=");
                     List<String> postContent =  extractXML1.start();
 
-//                    ExtractXML extractXML2 = new ExtractXML(entries.get(i).getContent(), "<img src=");
-                    /*try {
-                        postContent.add(extractXML2.start().get(0));
-                    }catch (NullPointerException e){
-                        postContent.add(null);
-                        Log.e(TAG, "onResponse: NullPointerException(thumbnail): "+ e.getMessage() );
-                    }
-                    catch (IndexOutOfBoundsException e){
-                        postContent.add(null);
-                        Log.e(TAG, "onResponse: IndexOutOfBoundsException(thumbnail): "+ e.getMessage() );
-                    }*/
-
-                    // -2 тому що там силка на фото заникана і короче так надо (если не понятно контент чекни)
+                    // -2 тому що там силка на фото заникана в контенті
                     int lastPosition = postContent.size() - 2;
                     posts.add(new Post(
                             entries.get(i).getTitle(),
